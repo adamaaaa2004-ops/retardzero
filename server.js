@@ -51,7 +51,13 @@ function stopName(stopId) {
   return (m && stationNames.get(m[1].slice(0, 7))) || stopId;
 }
 
-const text = (t) => t?.translation?.[0]?.text ?? "";
+const text = (t) => {
+  const list = t?.translation ?? [];
+  const fr = list.find((x) => /^fr/i.test(x.language ?? ""));
+  return (fr ?? list[0])?.text ?? "";
+};
+// Le numéro doit être un "mot" entier dans l'identifiant (pas collé à d'autres chiffres).
+const matches = (tripId, num) => new RegExp(`(^|\\D)${num}(\\D|$)`).test(String(tripId ?? ""));
 const clean = (s) => s.replace(/<br\s*\/?>/gi, "\n").replace(/<[^>]+>/g, "").trim();
 const sec = (v) => (v == null ? 0 : typeof v === "object" && v.toNumber ? v.toNumber() : Number(v));
 
@@ -67,7 +73,7 @@ async function lookup(num) {
   const [updates, alerts] = await Promise.all([feed("updates"), feed("alerts")]);
 
   const trips = updates.entity
-    .filter((e) => e.tripUpdate && String(e.tripUpdate.trip?.tripId ?? "").includes(num))
+    .filter((e) => e.tripUpdate && matches(e.tripUpdate.trip?.tripId, num))
     .map((e) => {
       const tu = e.tripUpdate;
       const stops = (tu.stopTimeUpdate ?? []).map((s) => ({
@@ -83,14 +89,24 @@ async function lookup(num) {
       };
     });
 
-  const messages = alerts.entity
+  const rawMessages = alerts.entity
     .filter(
       (e) =>
         e.alert &&
         isActiveNow(e.alert) &&
-        e.alert.informedEntity?.some((i) => String(i.trip?.tripId ?? "").includes(num))
+        e.alert.informedEntity?.some((i) => matches(i.trip?.tripId, num))
     )
     .map((e) => ({ title: text(e.alert.headerText), detail: clean(text(e.alert.descriptionText)) }));
+
+  const seen = new Set();
+  const messages = rawMessages
+    .filter((m) => {
+      const k = m.title + m.detail;
+      if (seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    })
+    .slice(0, 5);
 
   return {
     train: num,
