@@ -4,6 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>RetardZéro</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="RetardZéro">
+<meta name="theme-color" content="#2F4BFF">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#EDF1F5;--card:#FFFFFF;--ink:#13203A;--mute:#5B6780;--line:#D9E0E9;--ok:#0E7C66;--late:#B45309;--bad:#C0262D;--acc:#2F4BFF;--accink:#FFFFFF;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
@@ -108,6 +113,7 @@ function render(){
     }
     var msgs=L&&L.state==="ok"?L.d.messages:[];
     if(msgs.length){h+='<h2>Infos de la ligne</h2>';msgs.forEach(function(m){h+='<div class="box"><b>'+esc(m.title)+'</b><p class="mute pre">'+esc(m.detail)+'</p></div>'})}
+    h+=alertsBox(t);
     h+='<button class="btn alt" onclick="load(\''+t.num+'\')">Actualiser</button><button class="back" onclick="removeTrip('+t.id+')">Ne plus suivre ce train</button>';
   }
   if(S.view==="add"){
@@ -119,6 +125,34 @@ function render(){
   }
   a.innerHTML=h;
 }
+function isStandalone(){return window.navigator.standalone===true||(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)}
+function tripByNum(num){return S.trips.filter(function(t){return t.num===num})[0]}
+function alertsBox(t){
+  if(t.alerts)return'<div class="box"><b>🔔 Alertes activées</b><p class="mute">Vous serez prévenu en cas de retard, de suppression ou de retour à l’heure.</p><button class="btn alt" onclick="testPush()">Envoyer une notification test</button></div>';
+  if(/iPhone|iPad/.test(navigator.userAgent)&&!isStandalone())return'<div class="box"><b>Alertes sur iPhone</b><p class="mute">Touchez le bouton Partager de Safari, puis « Sur l’écran d’accueil ». Ouvrez ensuite RetardZéro depuis sa nouvelle icône et revenez sur ce train pour activer les alertes.</p></div>';
+  return'<button class="btn" onclick="enableAlerts(\''+t.num+'\')">Activer les alertes</button><p id="amsg" class="mute" role="alert"></p>';
+}
+function amsg(m){var e=document.getElementById("amsg");if(e)e.textContent=m}
+function urlB64(b){var p="=".repeat((4-b.length%4)%4),r=atob((b+p).replace(/-/g,"+").replace(/_/g,"/")),o=new Uint8Array(r.length);for(var i=0;i<r.length;i++)o[i]=r.charCodeAt(i);return o}
+async function enableAlerts(num){
+  try{
+    if(!("serviceWorker" in navigator)||!("PushManager" in window)||!("Notification" in window)){amsg("Notifications indisponibles ici. Ouvrez l’app depuis l’écran d’accueil.");return}
+    var perm=await Notification.requestPermission();
+    if(perm!=="granted"){amsg("Autorisation refusée. Vous pouvez la changer dans les réglages de l’iPhone.");return}
+    var reg=await navigator.serviceWorker.register("/sw.js");await navigator.serviceWorker.ready;
+    var k=await(await fetch("/api/vapid")).json();
+    if(!k.key){amsg("Les alertes ne sont pas encore configurées sur le serveur.");return}
+    var sub=await reg.pushManager.getSubscription()||await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlB64(k.key)});
+    var r=await fetch("/api/subscribe",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({subscription:sub,num:num})});
+    if(!r.ok){amsg("Le serveur a refusé l’inscription.");return}
+    tripByNum(num).alerts=true;save();render();
+  }catch(e){amsg("Erreur : "+e.message)}
+}
+async function testPush(){
+  try{var reg=await navigator.serviceWorker.getRegistration();var sub=reg&&await reg.pushManager.getSubscription();
+  if(sub)await fetch("/api/test",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({endpoint:sub.endpoint})})}catch(e){}
+}
+if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){})}
 render();loadAll();setInterval(loadAll,60000);
 </script>
 </body>
