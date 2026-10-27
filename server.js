@@ -1,4 +1,5 @@
 import http from "node:http";
+import { readFile } from "node:fs/promises";
 import GtfsRealtime from "gtfs-realtime-bindings";
 
 const { transit_realtime } = GtfsRealtime;
@@ -107,10 +108,13 @@ http
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Content-Type", "application/json; charset=utf-8");
     if (url.pathname === "/") {
-      res.setHeader("Content-Type", "text/html; charset=utf-8");
-      res.writeHead(200).end(
-        `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><body style="font:18px system-ui;padding:20px;max-width:500px;margin:auto"><h2>RetardZéro : test</h2><form action="/api/train"><input name="num" placeholder="N° de train (ex : 6601)" inputmode="numeric" style="font:inherit;padding:12px;width:100%;box-sizing:border-box"><button style="font:inherit;padding:12px;margin-top:10px;width:100%">Chercher</button></form></body>`
-      );
+      try {
+        const html = await readFile(new URL("./index.html", import.meta.url));
+        res.setHeader("Content-Type", "text/html; charset=utf-8");
+        res.writeHead(200).end(html);
+      } catch {
+        res.writeHead(500).end(JSON.stringify({ error: "index.html manquant" }));
+      }
       return;
     }
     if (url.pathname !== "/api/train") {
