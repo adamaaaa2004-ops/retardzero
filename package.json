@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "start":  "node rz2.js"
+    "start":  "node rz3.js"
   },
   "engines": {
     "node": ">=18"
