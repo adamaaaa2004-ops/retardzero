@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>RetardZéro</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="RetardZéro">
+<meta name="theme-color" content="#2F4BFF">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EDF1F5;--card:#FFFFFF;--ink:#13203A;--mute:#5B6780;--line:#D9E0E9;--ok:#0E7C66;--late:#B45309;--bad:#C0262D;--acc:#2F4BFF;--accink:#FFFFFF;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F1624;--card:#18223A;--ink:#EAF0FB;--mute:#9AA8C4;--line:#2A3857;--ok:#3DD6B0;--late:#F5B04C;--bad:#FF7A80;--acc:#7C92FF;--accink:#0F1624;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0F1624;--card:#18223A;--ink:#EAF0FB;--mute:#9AA8C4;--line:#2A3857;--ok:#3DD6B0;--late:#F5B04C;--bad:#FF7A80;--acc:#7C92FF;--accink:#0F1624;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 "Bricolage Grotesque",system-ui,-apple-system,sans-serif;max-width:520px;margin-inline:auto;min-height:100vh}
+main{padding:20px 18px 40px}
+h1{font-size:30px;line-height:1.1;margin:8px 0 4px;font-weight:800;letter-spacing:-.02em}
+h2{font-size:19px;margin:22px 0 8px;font-weight:700}
+p{margin:0 0 10px}.mute{color:var(--mute);font-size:14px}
+.top{display:flex;justify-content:space-between;align-items:center}
+.demo{font-size:12px;color:var(--mute);border:1px solid var(--line);border-radius:99px;padding:3px 10px}
+.brand{display:flex;align-items:center;gap:8px;font-size:24px;font-weight:800;letter-spacing:-.03em;color:var(--acc)}
+.hero{border-radius:22px;padding:20px;margin:18px 0 6px;border:1px solid var(--line)}.hero.calm{background:color-mix(in srgb,var(--ok) 13%,var(--card));border-color:color-mix(in srgb,var(--ok) 40%,var(--line))}.hero.warn{background:color-mix(in srgb,var(--late) 15%,var(--card));border-color:color-mix(in srgb,var(--late) 45%,var(--line))}.hl{font-size:30px;font-weight:800;letter-spacing:-.03em;line-height:1.1;margin-bottom:6px}
+.trip{display:block;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px 18px;margin:14px 0;color:inherit;font:inherit;cursor:pointer;box-shadow:0 1px 0 var(--line)}
+.trip:active{transform:scale(.99)}
+.rt{position:relative;padding-left:24px;margin:12px 0 10px;font-weight:600}.rt:before{content:"";position:absolute;left:5px;top:12px;bottom:12px;width:2px;background:var(--line)}.rt div{position:relative;padding:4px 0}.rt div:before{content:"";position:absolute;left:-24px;top:9px;width:12px;height:12px;border-radius:50%;border:2px solid var(--ink);background:var(--card)}.rt div.e:before{background:var(--ink)}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.big{font-size:30px;font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.tag,.pill{font-weight:700;font-size:13px;padding:4px 11px;border-radius:99px;white-space:nowrap}.tag.ok,.pill.ok{color:var(--ok);background:color-mix(in srgb,var(--ok) 15%,transparent)}.tag.late,.pill.late{color:var(--late);background:color-mix(in srgb,var(--late) 17%,transparent)}.tag.bad,.pill.bad{color:var(--bad);background:color-mix(in srgb,var(--bad) 15%,transparent)}
+.btn{display:block;width:100%;background:var(--acc);color:var(--accink);border:0;border-radius:16px;padding:16px;font:inherit;font-weight:700;font-size:17px;cursor:pointer;margin:10px 0}.btn:active{transform:scale(.99)}
+.btn.alt{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn:focus-visible,.trip:focus-visible,select:focus-visible,input:focus-visible,.back:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.back{background:none;border:0;color:var(--acc);font:inherit;font-weight:700;padding:6px 0;cursor:pointer}
+.box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:10px 0}
+label{display:block;font-weight:700;font-size:14px;margin:14px 0 4px}
+select,input[type=time]{width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit}
+.days{display:flex;gap:6px;flex-wrap:wrap}
+.days button{flex:1;min-width:42px;padding:10px 0;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-weight:700;cursor:pointer}
+.days button[aria-pressed=true]{background:var(--acc);color:var(--accink);border-color:var(--acc)}
+.alt-row{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}.alt-row:last-child{border:0}
+ul{padding-left:20px;margin:6px 0}
+#notif{position:fixed;left:50%;transform:translate(-50%,-140%);top:calc(env(safe-area-inset-top,0px) + 8px);width:min(500px,94vw);background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 16px;z-index:10;transition:transform .35s;box-shadow:0 6px 24px rgba(0,0,0,.25)}
+#notif.on{transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){#notif{transition:none}}
+</style>
+<style>.pre{white-space:pre-line}.hero.bad{background:color-mix(in srgb,var(--bad) 14%,var(--card));border-color:color-mix(in srgb,var(--bad) 45%,var(--line))}.hero.n{background:var(--card)}.hero .sub{color:var(--mute);font-size:15px}a{color:var(--acc)}.foot{margin-top:28px;font-size:13px;color:var(--mute)}.sg{display:block;width:100%;background:none;border:0;border-bottom:1px solid var(--line);color:var(--ink);font:inherit;text-align:left;padding:12px 4px;cursor:pointer}.seg{display:flex;gap:6px;margin:12px 0}.seg button{flex:1;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-weight:700;cursor:pointer}.seg button[aria-pressed=true]{background:var(--acc);color:var(--accink);border-color:var(--acc)}.pill.n{color:var(--mute);background:color-mix(in srgb,var(--mute) 15%,transparent)}input[type=text],input[type=tel]{width:100%;padding:14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-size:20px}</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+var K="rz2";
+var S={view:"list",sel:null,premium:false,trips:[],live:{},mode:"gares",pick:{f:null,t:null},sugg:{}};
+try{var o=JSON.parse(localStorage.getItem(K)||"null");if(o&&o.trips){S.trips=o.trips;S.premium=!!o.premium}}catch(e){}
+function save(){try{localStorage.setItem(K,JSON.stringify({trips:S.trips,premium:S.premium}))}catch(e){}}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function load(num){
+  if(!S.live[num])S.live[num]={state:"loading"};
+  return fetch("/api/train?num="+encodeURIComponent(num))
+    .then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j}})})
+    .then(function(x){S.live[num]=x.ok?{state:"ok",d:x.j,at:new Date()}:{state:"err",msg:x.j.error||"Erreur"}})
+    .catch(function(){S.live[num]={state:"err",msg:"Serveur injoignable"}})
+    .then(softRender);
+}
+function softRender(){if(S.view==="list"||S.view==="detail")render()}
+function loadAll(){S.trips.forEach(function(t){load(t.num)})}
+function tr(num){var L=S.live[num];return L&&L.state==="ok"?L.d.trips[0]:null}
+function st(num){
+  var L=S.live[num];
+  if(!L||L.state==="loading")return{c:"n",l:"Chargement…"};
+  if(L.state==="err")return{c:"bad",l:"Indisponible"};
+  var t=L.d.trips[0];
+  if(!t)return{c:"n",l:"Introuvable aujourd’hui"};
+  if(t.cancelled)return{c:"bad",l:"Supprimé"};
+  if(t.delayMin>=5)return{c:"late",l:"Retard de "+t.delayMin+" min"};
+  return{c:"ok",l:"À l’heure"};
+}
+function dest(num){var t=tr(num);if(!t||!t.stops.length)return"";return"Vers "+esc(t.stops[t.stops.length-1].name)}
+function go(v,id){S.view=v;if(id!==undefined)S.sel=id;render();window.scrollTo(0,0)}
+function tripById(id){return S.trips.filter(function(t){return t.id===id})[0]}
+function removeTrip(id){var rt=tripById(id);if(rt&&rt.alerts)unsub(rt.num);S.trips=S.trips.filter(function(t){return t.id!==id});save();go("list")}
+function addNum(num){
+  if(S.trips.some(function(t){return t.num===num}))return"Ce train est déjà suivi.";
+  if(S.trips.length>=1&&!S.premium){go("paywall");return"-"}
+  S.trips.push({id:Date.now(),num:num});save();load(num);go("list");return"";
+}
+function addTrip(){
+  var num=(document.getElementById("n").value||"").replace(/\D/g,"");
+  var msg=document.getElementById("msg");
+  if(!num){msg.textContent="Entrez le numéro de train (chiffres uniquement).";return}
+  var e=addNum(num);if(e&&e!=="-")msg.textContent=e;
+}
+function hhmm(sec){return new Date(sec*1000).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit",timeZone:"Europe/Paris"})}
+function upcoming(stops){var now=Date.now()/1000;var f=stops.filter(function(p){return !p.time||p.time>=now-300});return f.length?f:stops}
+function setMode(m){S.mode=m;render()}
+function sugg(w){
+  var el=document.getElementById(w+"in"),box=document.getElementById(w+"box"),q=el.value.trim();
+  S.pick[w]=null;
+  if(q.length<2){box.innerHTML="";return}
+  fetch("/api/stations?q="+encodeURIComponent(q)).then(function(r){return r.json()}).then(function(j){
+    S.sugg[w]=j.stations;
+    box.innerHTML=j.stations.map(function(s,i){return'<button class="sg" onclick="pickSt(\''+w+'\','+i+')">'+esc(s.name)+'</button>'}).join("");
+  }).catch(function(){});
+}
+function pickSt(w,i){var s=S.sugg[w][i];S.pick[w]=s;document.getElementById(w+"in").value=s.name;document.getElementById(w+"box").innerHTML=""}
+function followNum(num){var e=addNum(num);var m=document.getElementById("msg");if(e&&e!=="-"&&m)m.textContent=e}
+function searchTrains(){
+  var m=document.getElementById("msg"),res=document.getElementById("res");
+  if(!S.pick.f||!S.pick.t){m.textContent="Choisissez chaque gare dans la liste qui s’affiche sous le champ.";return}
+  m.textContent="Recherche…";res.innerHTML="";
+  fetch("/api/search?from="+S.pick.f.codes.join(",")+"&to="+S.pick.t.codes.join(",")).then(function(r){return r.json()}).then(function(j){
+    if(j.error){m.textContent=j.error;return}
+    m.textContent=j.trains.length?"Touchez un train pour le suivre.":"Aucun train trouvé pour ce trajet dans les données du moment. Essayez plus tard, ou cherchez par numéro.";
+    res.innerHTML=j.trains.map(function(t){
+      var c=t.cancelled?"bad":t.delayMin>=5?"late":"ok",l=t.cancelled?"Supprimé":t.delayMin>=5?"Retard "+t.delayMin+" min":"À l’heure";
+      return'<button class="trip" onclick="followNum(\''+t.num+'\')"><div class="row"><span class="big">'+(t.departAt?hhmm(t.departAt):"Train")+'</span><span class="pill '+c+'">'+l+'</span></div><div class="mute">Train '+t.num+(t.arriveAt?" · arrivée "+hhmm(t.arriveAt):"")+'</div></button>'}).join("");
+  }).catch(function(){m.textContent="Serveur injoignable."});
+}
+function render(){
+  var a=document.getElementById("app"),h="";
+  if(S.view==="list"){
+    var n=0;S.trips.forEach(function(t){var c=st(t.num).c;if(c==="late"||c==="bad")n++});
+    h+='<div class="top"><div class="brand"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><circle cx="5" cy="13" r="4" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M9 13h8" stroke="currentColor" stroke-width="2.5"/><circle cx="21" cy="13" r="4" fill="currentColor"/></svg>RetardZéro</div><span class="demo">Données SNCF en direct</span></div>';
+    h+='<div class="hero '+(n?"warn":"calm")+'"><div class="hl">'+(!S.trips.length?"Bienvenue":n?n+(n>1?" trains perturbés":" train perturbé"):"Tout roule")+'</div><div>'+(!S.trips.length?"Ajoutez le numéro de votre train pour le suivre en direct.":n?"Ouvrez un train pour voir les détails.":"Aucun retard détecté sur vos trains.")+'</div></div>';
+    S.trips.forEach(function(t){var s=st(t.num);
+      h+='<button class="trip" onclick="go(\'detail\','+t.id+')"><div class="row"><span class="big">Train '+esc(t.num)+'</span><span class="pill '+s.c+'">'+s.l+'</span></div><div class="mute">'+(dest(t.num)||"&nbsp;")+'</div></button>'});
+    h+='<button class="btn" onclick="go(\'add\')">Ajouter un train</button>';
+    h+='<button class="btn alt" onclick="loadAll()">Actualiser</button>';
+    h+='<p class="foot">Application indépendante, non affiliée à la SNCF. Informations données à titre indicatif.<br><a href="/mentions-legales">Mentions légales</a> · <a href="/confidentialite">Confidentialité</a></p>';
+  }
+  if(S.view==="detail"){
+    var t=tripById(S.sel);if(!t){go("list");return}
+    var s=st(t.num),d=tr(t.num),L=S.live[t.num];
+    h+='<button class="back" onclick="go(\'list\')">‹ Retour</button><h1>Train '+esc(t.num)+'</h1>';
+    var hc=s.c==="ok"?"calm":s.c==="late"?"warn":s.c==="bad"?"bad":"n";
+    h+='<div class="hero '+hc+'"><div class="hl">'+s.l+'</div><div class="sub">'+(dest(t.num)||"")+(dest(t.num)&&L&&L.at?" · ":"")+(L&&L.at?"mis à jour à "+L.at.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"}):"")+'</div>'+(L&&L.state==="err"?'<div class="sub">'+esc(L.msg)+'</div>':'')+'</div>';
+    if(L&&L.state==="ok"&&!d)h+='<div class="box"><p>Ce train ne figure pas dans les données temps réel du jour. Vérifiez le numéro sur votre billet.</p></div>';
+    if(d){
+      h+='<h2>Prochains arrêts</h2><div class="box">'+upcoming(d.stops).slice(0,12).map(function(p){return'<div class="alt-row"><span>'+(p.time?'<b>'+hhmm(p.time)+'</b> ':'')+esc(p.name)+'</span><b>'+(p.delayMin>0?"+"+p.delayMin+" min":"à l’heure")+'</b></div>'}).join("")+'</div>';
+      if(d.cancelled||d.delayMin>=5)h+='<h2>Plan B</h2><div class="box"><p>Consultez les prochains départs sur le site ou l’application de la SNCF, et comparez avec le bus ou le covoiturage.</p></div>';
+      if(d.cancelled||d.delayMin>=30)h+='<h2>Remboursement</h2><div class="box"><p>À partir de 30 minutes de retard, ou en cas de suppression, vous pouvez avoir droit à une compensation ou à un remboursement.</p><ul><li>Gardez votre billet et la preuve du retard.</li><li>Faites la demande sur le site du transporteur.</li><li>Vérifiez les conditions de votre billet.</li></ul></div>';
+    }
+    var msgs=L&&L.state==="ok"?L.d.messages:[];
+    if(msgs.length){h+='<h2>Infos de la ligne</h2>';msgs.forEach(function(m){h+='<div class="box"><b>'+esc(m.title)+'</b><p class="mute pre">'+esc(m.detail)+'</p></div>'})}
+    h+=alertsBox(t);
+    h+='<button class="btn alt" onclick="load(\''+t.num+'\')">Actualiser</button><button class="back" onclick="removeTrip('+t.id+')">Ne plus suivre ce train</button>';
+  }
+  if(S.view==="add"){
+    h+='<button class="back" onclick="go(\'list\')">‹ Retour</button><h1>Ajouter un train</h1>';
+    h+='<div class="seg"><button aria-pressed="'+(S.mode==="gares")+'" onclick="setMode(\'gares\')">Par gares</button><button aria-pressed="'+(S.mode==="num")+'" onclick="setMode(\'num\')">Par numéro</button></div>';
+    if(S.mode==="gares"){
+      h+='<label for="fin">Gare de départ</label><input id="fin" type="text" autocomplete="off" placeholder="Paris Gare de Lyon" oninput="sugg(\'f\')"><div id="fbox"></div><label for="tin">Gare d’arrivée</label><input id="tin" type="text" autocomplete="off" placeholder="Lyon Part-Dieu" oninput="sugg(\'t\')"><div id="tbox"></div><button class="btn" onclick="searchTrains()">Chercher les trains</button><p id="msg" class="mute" role="alert"></p><div id="res"></div>';
+    }else{
+      h+='<p class="mute">Le numéro est indiqué sur votre billet (par exemple 6601).</p><label for="n">Numéro de train</label><input id="n" type="tel" inputmode="numeric" placeholder="6601"><p id="msg" class="mute" role="alert"></p><button class="btn" onclick="addTrip()">Suivre ce train</button>';
+    }
+    if(!S.premium)h+='<p class="mute">Le gratuit suit 1 train. Premium en suit autant que vous voulez.</p>';
+  }
+  if(S.view==="paywall"){
+    h+='<button class="back" onclick="go(\'list\')">‹ Retour</button><h1>Premium</h1><p>Suivez tous vos trains et ne subissez plus les retards.</p><div class="box"><ul><li>Trains illimités</li><li>Aide au remboursement</li><li>Alertes sur votre téléphone (bientôt)</li></ul></div><div class="box"><div class="row"><b>Annuel</b><span class="big">25 €/an</span></div><p class="mute">7 jours d’essai gratuit.</p></div><div class="box"><div class="row"><b>Mensuel</b><span class="big">3,99 €</span></div></div>'+(S.premium?'<button class="btn alt" onclick="S.premium=false;save();render()">Revenir au gratuit (démo)</button>':'<button class="btn" onclick="S.premium=true;save();go(\'add\')">Essayer 7 jours gratuits</button>')+'<p class="mute">Démo : aucun paiement réel.</p>';
+  }
+  a.innerHTML=h;
+}
+function isStandalone(){return window.navigator.standalone===true||(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)}
+function tripByNum(num){return S.trips.filter(function(t){return t.num===num})[0]}
+function alertsBox(t){
+  if(t.alerts)return'<div class="box"><b>🔔 Alertes activées</b><p class="mute">Vous serez prévenu en cas de retard, de suppression ou de retour à l’heure.</p><button class="btn alt" onclick="testPush()">Envoyer une notification test</button><button class="back" onclick="disableAlerts(\''+t.num+'\')">Désactiver les alertes</button></div>';
+  if(/iPhone|iPad/.test(navigator.userAgent)&&!isStandalone())return'<div class="box"><b>Alertes sur iPhone</b><p class="mute">Touchez le bouton Partager de Safari, puis « Sur l’écran d’accueil ». Ouvrez ensuite RetardZéro depuis sa nouvelle icône et revenez sur ce train pour activer les alertes.</p></div>';
+  return'<button class="btn" onclick="enableAlerts(\''+t.num+'\')">Activer les alertes</button><p id="amsg" class="mute" role="alert"></p>';
+}
+function amsg(m){var e=document.getElementById("amsg");if(e)e.textContent=m}
+function urlB64(b){var p="=".repeat((4-b.length%4)%4),r=atob((b+p).replace(/-/g,"+").replace(/_/g,"/")),o=new Uint8Array(r.length);for(var i=0;i<r.length;i++)o[i]=r.charCodeAt(i);return o}
+async function enableAlerts(num){
+  try{
+    if(!("serviceWorker" in navigator)||!("PushManager" in window)||!("Notification" in window)){amsg("Notifications indisponibles ici. Ouvrez l’app depuis l’écran d’accueil.");return}
+    var perm=await Notification.requestPermission();
+    if(perm!=="granted"){amsg("Autorisation refusée. Vous pouvez la changer dans les réglages de l’iPhone.");return}
+    var reg=await navigator.serviceWorker.register("/sw.js");await navigator.serviceWorker.ready;
+    var k=await(await fetch("/api/vapid")).json();
+    if(!k.key){amsg("Les alertes ne sont pas encore configurées sur le serveur.");return}
+    var sub=await reg.pushManager.getSubscription()||await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlB64(k.key)});
+    var r=await fetch("/api/subscribe",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({subscription:sub,num:num})});
+    if(!r.ok){amsg("Le serveur a refusé l’inscription.");return}
+    tripByNum(num).alerts=true;save();render();
+  }catch(e){amsg("Erreur : "+e.message)}
+}
+function unsub(num){
+  return navigator.serviceWorker.getRegistration().then(function(reg){return reg&&reg.pushManager.getSubscription()}).then(function(sub){
+    if(sub)return fetch("/api/unsubscribe",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({endpoint:sub.endpoint,num:num})})
+  }).catch(function(){});
+}
+function disableAlerts(num){unsub(num);var t=tripByNum(num);if(t)t.alerts=false;save();render()}
+async function testPush(){
+  try{var reg=await navigator.serviceWorker.getRegistration();var sub=reg&&await reg.pushManager.getSubscription();
+  if(sub)await fetch("/api/test",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({endpoint:sub.endpoint})})}catch(e){}
+}
+if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){})}
+render();loadAll();setInterval(loadAll,60000);
+</script>
+</body>
+</html>
